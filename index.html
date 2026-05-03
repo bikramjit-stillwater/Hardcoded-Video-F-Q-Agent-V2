@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Stillwater Yoga</title>
+  <title>Stilwater Yoga</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #e6f4f1, #f7fbfa);
-      text-align: center;
-      min-height: 100vh;
+      color: #2d3a3a;
     }
+    /* LOGO */
     #logo {
       position: fixed;
       top: 15px;
@@ -18,42 +18,79 @@
       border-radius: 12px;
       z-index: 10;
     }
+    /* MAIN CARD */
     .container {
       max-width: 900px;
-      margin: 60px auto;
-      padding: 20px;
+      margin: 80px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 25px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+      text-align: center;
     }
     h1 {
+      margin-bottom: 5px;
       color: #2c5f5d;
+      font-size: 32px;
     }
-    .main-content {
-      padding: 40px 20px;
-      color: #2c5f5d;
+    .tagline {
+      font-size: 16px;
+      color: #6b8f8d;
+      margin-bottom: 25px;
     }
-    #askBtn {
+    /* AVATAR */
+    #avatarContainer {
+      transition: all 0.4s ease;
+      margin-bottom: 20px;
+    }
+    .small-avatar {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      padding: 12px 20px;
-      border-radius: 30px;
-      border: none;
-      background: #2c7a7b;
-      color: white;
-      cursor: pointer;
-      font-size: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 10;
-    }
-    #agentBox {
-      display: none;
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      width: 300px;
+      width: 220px;
       z-index: 999;
     }
+    /* VIDEO */
+    #videoContainer {
+      display: none;
+      margin-top: 20px;
+    }
+    iframe {
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    /* BUTTONS */
+    .buttons {
+      margin-top: 25px;
+    }
+    button {
+      padding: 12px 24px;
+      margin: 8px;
+      font-size: 15px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 500;
+    }
+    .btn-primary {
+      background: #2c7a7b;
+      color: white;
+    }
+    .btn-secondary {
+      background: #68b0ab;
+      color: white;
+    }
+    .btn-repeat {
+      background: #dff3f1;
+      color: #2c5f5d;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
 
-    /* Video Modal Overlay */
+    /* INTRO VIDEO MODAL OVERLAY */
     #videoOverlay {
       position: fixed;
       top: 0;
@@ -71,10 +108,10 @@
       opacity: 0;
       pointer-events: none;
     }
-    .video-wrapper {
+    .intro-wrapper {
       position: relative;
       width: 90%;
-      max-width: 800px;
+      max-width: 380px;
     }
     #introVideo {
       width: 100%;
@@ -124,87 +161,116 @@
        src="https://media.licdn.com/dms/image/v2/D560BAQEuMEuoQOLNOg/company-logo_200_200/B56Z1iBkplJsAI-/0/1775466073533/stilwater_you_logo?e=1779321600&v=beta&t=yEpGMXIbEhVeaEw3KWC42nPk7bi5n-3fPeEh0cn4IsE"
        alt="Stillwater Logo">
 
-  <!-- VIDEO MODAL OVERLAY -->
+  <!-- INTRO VIDEO MODAL (auto-plays on page load, auto-hides when ended) -->
   <div id="videoOverlay">
-    <div class="video-wrapper">
-      <button id="closeVideoBtn" onclick="hideVideo()">✕</button>
+    <div class="intro-wrapper">
+      <button id="closeVideoBtn" onclick="hideIntroVideo()">✕</button>
       <video id="introVideo" playsinline>
         <source src="https://raw.githubusercontent.com/bikramjit-stillwater/Hardcoded-Video-F-Q-Agent-V2/main/yoga.mp4" type="video/mp4">
         Your browser does not support video.
       </video>
-      <button id="unmuteHint" onclick="unmuteVideo()">🔊 Tap to enable sound</button>
+      <button id="unmuteHint" onclick="unmuteIntroVideo()">🔊 Tap to enable sound</button>
     </div>
   </div>
 
-  <!-- MAIN CONTENT (visible after video) -->
-  <div class="main-content">
-    <div class="container">
-      <h1>🧘 AI Powered Yoga Guide</h1>
-      <p>Welcome to Stillwater. Click the "Ask AI" button below to start your guided session.</p>
+  <div class="container">
+    <h1>🧘 AI Powered Yoga Guide</h1>
+    <div class="tagline">Powered by Stilwater</div>
+
+    <!-- Avatar -->
+    <div id="avatarContainer">
+      <lemon-slice-widget agent-id="agent_960a480563fb66ac"></lemon-slice-widget>
+    </div>
+    <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
+
+    <!-- YouTube Video Player -->
+    <div id="videoContainer">
+      <iframe id="videoPlayer" width="600" height="340" allow="autoplay" allowfullscreen></iframe>
+    </div>
+
+    <!-- Pose Buttons -->
+    <div class="buttons">
+      <button class="btn-primary" onclick="playTadasana()">🧘 Tadasana</button>
+      <button class="btn-secondary" onclick="playVrikshasana()">🌳 Vrikshasana</button>
+      <button class="btn-repeat" onclick="repeatPose()">🔁 Repeat</button>
     </div>
   </div>
 
-  <!-- ASK AI -->
-  <button id="askBtn" onclick="openAgent()">💬 Ask AI</button>
-
-  <!-- AGENT -->
-  <div id="agentBox">
-    <lemon-slice-widget agent-id="agent_77081533e48ba693"></lemon-slice-widget>
-  </div>
-
-  <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
   <script>
-    const video = document.getElementById('introVideo');
+    /* ---------- INTRO VIDEO LOGIC ---------- */
+    const introVideo = document.getElementById('introVideo');
     const overlay = document.getElementById('videoOverlay');
     const unmuteHint = document.getElementById('unmuteHint');
 
-    // Try to play with sound first
-    function startVideo() {
-      video.muted = false;
-      video.volume = 1.0;
-      const playPromise = video.play();
+    function startIntroVideo() {
+      introVideo.muted = false;
+      introVideo.volume = 1.0;
+      const playPromise = introVideo.play();
 
       if (playPromise !== undefined) {
         playPromise.catch(() => {
           // Browser blocked unmuted autoplay — fall back to muted and show hint
-          video.muted = true;
-          video.play().then(() => {
+          introVideo.muted = true;
+          introVideo.play().then(() => {
             unmuteHint.style.display = 'block';
           }).catch(err => console.log('Video play failed:', err));
         });
       }
     }
 
-    function unmuteVideo() {
-      video.muted = false;
-      video.volume = 1.0;
+    function unmuteIntroVideo() {
+      introVideo.muted = false;
+      introVideo.volume = 1.0;
       unmuteHint.style.display = 'none';
     }
 
-    function hideVideo() {
+    function hideIntroVideo() {
       overlay.classList.add('hidden');
-      video.pause();
+      introVideo.pause();
       setTimeout(() => {
         overlay.style.display = 'none';
       }, 500);
     }
 
-    // Auto-hide when video finishes
-    video.addEventListener('ended', hideVideo);
+    // Auto-hide when intro video finishes
+    introVideo.addEventListener('ended', hideIntroVideo);
 
-    // Hide unmute hint once user interacts (clicks anywhere)
-    document.addEventListener('click', function once(e) {
-      if (video.muted && !overlay.classList.contains('hidden')) {
-        video.muted = false;
+    // First click anywhere unmutes if it was forced muted
+    document.addEventListener('click', function () {
+      if (introVideo.muted && !overlay.classList.contains('hidden')) {
+        introVideo.muted = false;
         unmuteHint.style.display = 'none';
       }
     });
 
-    // Start the video when the page loads
-    window.addEventListener('load', startVideo);
+    // Start on page load
+    window.addEventListener('load', startIntroVideo);
 
-    function openAgent() {
-      document.getElementById("agentBox").style.display = "block";
+    /* ---------- YOGA POSE BUTTONS ---------- */
+    const videos = {
+      tadasana: "https://www.youtube.com/embed/MdTEXIdHxpI",
+      vrikshasana: "https://www.youtube.com/embed/FuKBRfvLGj8"
+    };
+    let currentPose = "tadasana";
+
+    function playTadasana() {
+      currentPose = "tadasana";
+      playVideo();
+    }
+    function playVrikshasana() {
+      currentPose = "vrikshasana";
+      playVideo();
+    }
+    function repeatPose() {
+      playVideo();
+    }
+    function playVideo() {
+      const player = document.getElementById("videoPlayer");
+      const videoContainer = document.getElementById("videoContainer");
+      const avatar = document.getElementById("avatarContainer");
+      videoContainer.style.display = "block";
+      player.src = videos[currentPose] + "?autoplay=1";
+      avatar.classList.add("small-avatar");
     }
   </script>
 </body>
