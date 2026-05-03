@@ -1,102 +1,98 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Yoga Trainer</title>
+  <title>Stillwater Yoga</title>
 
   <style>
     body {
-      font-family: Arial;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e6f4f1, #f7fbfa);
       text-align: center;
-      background: #111;
-      color: white;
     }
 
-    #avatarContainer {
+    #logo {
+      position: fixed;
+      top: 15px;
+      left: 20px;
+      width: 70px;
+      border-radius: 12px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #2c5f5d;
+    }
+
+    video {
       width: 100%;
-      transition: all 0.5s ease;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
-    .small-avatar {
+    /* Ask AI Button */
+    #askBtn {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 200px;
-      z-index: 999;
-    }
-
-    #videoContainer {
-      display: none;
-      margin-top: 20px;
-    }
-
-    iframe {
-      border-radius: 10px;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin: 5px;
-      font-size: 16px;
+      padding: 12px 20px;
+      border-radius: 30px;
+      border: none;
+      background: #2c7a7b;
+      color: white;
       cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* Agent */
+    #agentBox {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 300px;
+      z-index: 999;
     }
   </style>
 </head>
 
 <body>
 
-  <h2>🧘 Yoga Trainer</h2>
+  <!-- LOGO -->
+  <img id="logo"
+       src="https://media.licdn.com/dms/image/v2/D560BAQEuMEuoQOLNOg/company-logo_200_200/B56Z1iBkplJsAI-/0/1775466073533/stilwater_you_logo?e=1779321600&v=beta&t=yEpGMXIbEhVeaEw3KWC42nPk7bi5n-3fPeEh0cn4IsE"
+       alt="Stillwater Logo">
 
-  <!-- Avatar -->
-  <div id="avatarContainer">
-    <lemon-slice-widget agent-id="agent_960a480563fb66ac"></lemon-slice-widget>
+  <div class="container">
+
+    <h1>🧘 AI Powered Yoga Guide</h1>
+
+    <!-- LOCAL VIDEO -->
+    <video controls autoplay>
+      <source src="yoga.mp4" type="video/mp4">
+      Your browser does not support video.
+    </video>
+
+  </div>
+
+  <!-- ASK AI BUTTON -->
+  <button id="askBtn" onclick="openAgent()">💬 Ask AI</button>
+
+  <!-- AGENT (NEW ID) -->
+  <div id="agentBox">
+    <lemon-slice-widget agent-id="agent_77081533e48ba693"></lemon-slice-widget>
   </div>
 
   <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
-  <!-- Video -->
-  <div id="videoContainer">
-    <iframe id="videoPlayer" width="500" height="300" allow="autoplay" allowfullscreen></iframe>
-  </div>
-
-  <br>
-
-  <!-- Buttons -->
-  <button onclick="playTadasana()">🧘 Tadasana</button>
-  <button onclick="playVrikshasana()">🌳 Vrikshasana</button>
-  <button onclick="repeatPose()">🔁 Repeat</button>
-
   <script>
-    const videos = {
-      tadasana: "https://www.youtube.com/embed/MdTEXIdHxpI",
-      vrikshasana: "https://www.youtube.com/embed/FuKBRfvLGj8"
-    };
-
-    let currentPose = "tadasana";
-
-    function playTadasana() {
-      currentPose = "tadasana";
-      playVideo();
-    }
-
-    function playVrikshasana() {
-      currentPose = "vrikshasana";
-      playVideo();
-    }
-
-    function repeatPose() {
-      playVideo();
-    }
-
-    function playVideo() {
-      const player = document.getElementById("videoPlayer");
-      const videoContainer = document.getElementById("videoContainer");
-      const avatar = document.getElementById("avatarContainer");
-
-      videoContainer.style.display = "block";
-      player.src = videos[currentPose] + "?autoplay=1";
-
-      // move avatar to corner automatically
-      avatar.classList.add("small-avatar");
+    function openAgent() {
+      document.getElementById("agentBox").style.display = "block";
     }
   </script>
 
