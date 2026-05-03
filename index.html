@@ -2,39 +2,34 @@
 <html>
 <head>
   <title>Stillwater Yoga</title>
-
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #e6f4f1, #f7fbfa);
       text-align: center;
+      min-height: 100vh;
     }
-
     #logo {
       position: fixed;
       top: 15px;
       left: 20px;
       width: 70px;
       border-radius: 12px;
+      z-index: 10;
     }
-
     .container {
       max-width: 900px;
       margin: 60px auto;
       padding: 20px;
     }
-
     h1 {
       color: #2c5f5d;
     }
-
-    video {
-      width: 100%;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    .main-content {
+      padding: 40px 20px;
+      color: #2c5f5d;
     }
-
     #askBtn {
       position: fixed;
       bottom: 20px;
@@ -45,8 +40,10 @@
       background: #2c7a7b;
       color: white;
       cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 10;
     }
-
     #agentBox {
       display: none;
       position: fixed;
@@ -55,26 +52,96 @@
       width: 300px;
       z-index: 999;
     }
+
+    /* Video Modal Overlay */
+    #videoOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    #videoOverlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .video-wrapper {
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+    }
+    #introVideo {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      display: block;
+    }
+    #closeVideoBtn {
+      position: absolute;
+      top: -45px;
+      right: 0;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid white;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #closeVideoBtn:hover {
+      background: rgba(255,255,255,0.35);
+    }
+    #unmuteHint {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 16px 28px;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+      border: 2px solid white;
+    }
   </style>
 </head>
-
 <body>
-
   <!-- LOGO -->
   <img id="logo"
        src="https://media.licdn.com/dms/image/v2/D560BAQEuMEuoQOLNOg/company-logo_200_200/B56Z1iBkplJsAI-/0/1775466073533/stilwater_you_logo?e=1779321600&v=beta&t=yEpGMXIbEhVeaEw3KWC42nPk7bi5n-3fPeEh0cn4IsE"
        alt="Stillwater Logo">
 
-  <div class="container">
+  <!-- VIDEO MODAL OVERLAY -->
+  <div id="videoOverlay">
+    <div class="video-wrapper">
+      <button id="closeVideoBtn" onclick="hideVideo()">✕</button>
+      <video id="introVideo" playsinline>
+        <source src="https://raw.githubusercontent.com/bikramjit-stillwater/Hardcoded-Video-F-Q-Agent-V2/main/yoga.mp4" type="video/mp4">
+        Your browser does not support video.
+      </video>
+      <button id="unmuteHint" onclick="unmuteVideo()">🔊 Tap to enable sound</button>
+    </div>
+  </div>
 
-    <h1>🧘 AI Powered Yoga Guide</h1>
-
-    <!-- VIDEO -->
-    <video controls autoplay muted>
-      <source src="https://raw.githubusercontent.com/bikramjit-stillwater/Hardcoded-Video-F-Q-Agent-V2/main/yoga.mp4" type="video/mp4">
-      Your browser does not support video.
-    </video>
-
+  <!-- MAIN CONTENT (visible after video) -->
+  <div class="main-content">
+    <div class="container">
+      <h1>🧘 AI Powered Yoga Guide</h1>
+      <p>Welcome to Stillwater. Click the "Ask AI" button below to start your guided session.</p>
+    </div>
   </div>
 
   <!-- ASK AI -->
@@ -86,12 +153,59 @@
   </div>
 
   <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
-
   <script>
+    const video = document.getElementById('introVideo');
+    const overlay = document.getElementById('videoOverlay');
+    const unmuteHint = document.getElementById('unmuteHint');
+
+    // Try to play with sound first
+    function startVideo() {
+      video.muted = false;
+      video.volume = 1.0;
+      const playPromise = video.play();
+
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Browser blocked unmuted autoplay — fall back to muted and show hint
+          video.muted = true;
+          video.play().then(() => {
+            unmuteHint.style.display = 'block';
+          }).catch(err => console.log('Video play failed:', err));
+        });
+      }
+    }
+
+    function unmuteVideo() {
+      video.muted = false;
+      video.volume = 1.0;
+      unmuteHint.style.display = 'none';
+    }
+
+    function hideVideo() {
+      overlay.classList.add('hidden');
+      video.pause();
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 500);
+    }
+
+    // Auto-hide when video finishes
+    video.addEventListener('ended', hideVideo);
+
+    // Hide unmute hint once user interacts (clicks anywhere)
+    document.addEventListener('click', function once(e) {
+      if (video.muted && !overlay.classList.contains('hidden')) {
+        video.muted = false;
+        unmuteHint.style.display = 'none';
+      }
+    });
+
+    // Start the video when the page loads
+    window.addEventListener('load', startVideo);
+
     function openAgent() {
       document.getElementById("agentBox").style.display = "block";
     }
   </script>
-
 </body>
 </html>
