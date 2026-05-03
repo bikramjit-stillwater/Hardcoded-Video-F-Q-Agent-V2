@@ -35,7 +35,6 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
-    /* Ask AI Button */
     #askBtn {
       position: fixed;
       bottom: 20px;
@@ -46,10 +45,8 @@
       background: #2c7a7b;
       color: white;
       cursor: pointer;
-      font-size: 14px;
     }
 
-    /* Agent */
     #agentBox {
       display: none;
       position: fixed;
@@ -72,18 +69,18 @@
 
     <h1>🧘 AI Powered Yoga Guide</h1>
 
-    <!-- LOCAL VIDEO -->
-    <video controls autoplay>
-      <source src="yoga.mp4" type="video/mp4">
+    <!-- VIDEO -->
+    <video controls autoplay muted>
+      <source src="https://raw.githubusercontent.com/bikramjit-stillwater/Hardcoded-Video-F-Q-Agent-V2/main/yoga.mp4" type="video/mp4">
       Your browser does not support video.
     </video>
 
   </div>
 
-  <!-- ASK AI BUTTON -->
+  <!-- ASK AI -->
   <button id="askBtn" onclick="openAgent()">💬 Ask AI</button>
 
-  <!-- AGENT (NEW ID) -->
+  <!-- AGENT -->
   <div id="agentBox">
     <lemon-slice-widget agent-id="agent_77081533e48ba693"></lemon-slice-widget>
   </div>
