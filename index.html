@@ -42,6 +42,7 @@
     #avatarContainer {
       transition: all 0.4s ease;
       margin-bottom: 20px;
+      display: none;
     }
     .small-avatar {
       position: fixed;
@@ -84,6 +85,15 @@
     .btn-repeat {
       background: #dff3f1;
       color: #2c5f5d;
+    }
+    .btn-faq {
+      background: #f4a261;
+      color: white;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     button:hover {
       transform: translateY(-2px);
@@ -196,6 +206,9 @@
     </div>
   </div>
 
+  <!-- Floating F&Q Button (bottom-right) -->
+  <button class="btn-faq" onclick="openFAQ()">💬 F&Q</button>
+
   <script>
     /* ---------- INTRO VIDEO LOGIC ---------- */
     const introVideo = document.getElementById('introVideo');
@@ -270,7 +283,21 @@
       const avatar = document.getElementById("avatarContainer");
       videoContainer.style.display = "block";
       player.src = videos[currentPose] + "?autoplay=1";
-      avatar.classList.add("small-avatar");
+      // Only resize avatar to corner if it's already visible
+      if (avatar.style.display === "block") {
+        avatar.classList.add("small-avatar");
+      }
+    }
+
+    /* ---------- F&Q BUTTON ---------- */
+    function openFAQ() {
+      const avatar = document.getElementById("avatarContainer");
+      avatar.style.display = "block";
+      // If a yoga video is already playing, pin avatar to the corner
+      const videoContainer = document.getElementById("videoContainer");
+      if (videoContainer.style.display === "block") {
+        avatar.classList.add("small-avatar");
+      }
     }
   </script>
 </body>
